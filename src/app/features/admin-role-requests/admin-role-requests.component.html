@@ -1,0 +1,103 @@
+<div class="review-page">
+  <header class="review-page__header fade-up">
+    <div>
+      <span class="section-kicker">Admin</span>
+      <h1>Role requests</h1>
+    </div>
+    @if (pendingCount() > 0) {
+      <span class="pending-badge">{{ pendingCount() }} pending</span>
+    }
+  </header>
+
+  <div class="review-page__filters fade-up" style="animation-delay: 0.05s">
+    @for (option of filters; track option) {
+      <button type="button" [class.is-active]="filter() === option" (click)="setFilter(option)">
+        {{ option }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="review-page__skeleton">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton" style="height: 88px;"></div>
+      }
+    </div>
+  } @else if (requests().length > 0) {
+    <div class="request-list fade-up" style="animation-delay: 0.1s">
+      @for (request of requests(); track request.id) {
+        <div class="request-card">
+          <div class="request-card__main">
+            <div class="request-card__identity">
+              <span class="request-card__email">{{ request.email }}</span>
+              <span class="role-pill">{{ request.requestedRole }}</span>
+              <span class="status-pill" [class]="'status-pill--' + request.status.toLowerCase()">
+                {{ request.status }}
+              </span>
+            </div>
+
+            @if (request.note) {
+              <p class="request-card__note">“{{ request.note }}”</p>
+            }
+
+            <p class="request-card__meta">
+              Requested {{ request.requestedAt | date: 'MMM d, y, h:mm a' }}
+              @if (request.reviewedByEmail) {
+                · Reviewed by {{ request.reviewedByEmail }}
+              }
+            </p>
+
+            @if (request.status === 'Rejected' && request.rejectionReason) {
+              <p class="request-card__rejection">Reason: {{ request.rejectionReason }}</p>
+            }
+          </div>
+
+          @if (request.status === 'Pending') {
+            @if (rejectingId() === request.id) {
+              <div class="request-card__reject-form">
+                <input
+                  type="text"
+                  placeholder="Reason (optional)"
+                  [(ngModel)]="rejectionReason"
+                  name="rejectionReason"
+                />
+                <div class="request-card__reject-actions">
+                  <button type="button" class="link-btn link-btn--muted" (click)="cancelReject()">Cancel</button>
+                  <button
+                    type="button"
+                    class="link-btn link-btn--danger"
+                    (click)="confirmReject(request)"
+                    [disabled]="processingId() === request.id"
+                  >
+                    Confirm reject
+                  </button>
+                </div>
+              </div>
+            } @else {
+              <div class="request-card__actions">
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  (click)="startReject(request)"
+                  [disabled]="processingId() === request.id"
+                >
+                  Reject
+                </button>
+                <button
+                  type="button"
+                  class="btn-primary"
+                  (click)="approve(request)"
+                  [disabled]="processingId() === request.id"
+                >
+                  {{ processingId() === request.id ? 'Approving…' : 'Approve' }}
+                </button>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <tms-empty-state icon="📥" title="Nothing here" description="No role requests match this filter." />
+  }
+</div>

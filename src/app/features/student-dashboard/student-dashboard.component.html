@@ -1,0 +1,211 @@
+<div class="dashboard">
+  <header class="dashboard__header fade-up">
+    <div>
+      <span class="section-kicker">Student dashboard</span>
+      <h1>Welcome back, {{ studentName() }}</h1>
+    </div>
+    <a routerLink="/enroll" class="btn-primary">Enroll in a course</a>
+  </header>
+
+  @if (roleRequest(); as request) {
+    @if (request.status === 'Pending') {
+      <div class="role-banner role-banner--pending fade-up">
+        <span class="role-banner__icon">⏳</span>
+        <div>
+          <p class="role-banner__title">
+            Your request to become {{ request.requestedRole }} is pending review.
+          </p>
+          <p class="role-banner__subtitle">An Admin needs to approve this before your access changes.</p>
+        </div>
+      </div>
+    } @else if (request.status === 'Rejected') {
+      <div class="role-banner role-banner--rejected fade-up">
+        <span class="role-banner__icon">✕</span>
+        <div>
+          <p class="role-banner__title">Your request to become {{ request.requestedRole }} was declined.</p>
+          @if (request.rejectionReason) {
+            <p class="role-banner__subtitle">{{ request.rejectionReason }}</p>
+          }
+        </div>
+      </div>
+    } @else if (request.status === 'Approved') {
+      <div class="role-banner role-banner--approved fade-up">
+        <span class="role-banner__icon">✓</span>
+        <div>
+          <p class="role-banner__title">You've been approved as {{ request.requestedRole }}!</p>
+          <p class="role-banner__subtitle">Log out and back in to see your new access.</p>
+        </div>
+      </div>
+    }
+  }
+
+  <section class="dashboard__stats fade-up" style="animation-delay: 0.05s">
+    <tms-stat-widget label="Available courses" [value]="store.entities().length" tone="accent">
+      <span icon>🎓</span>
+    </tms-stat-widget>
+    <tms-stat-widget label="Earned credits" [value]="earnedCredits()" tone="success" [description]="'Goal: ' + creditsGoal()">
+      <span icon>⭐</span>
+    </tms-stat-widget>
+    <tms-stat-widget label="Certificates" [value]="certificates().length" tone="warning" description="Linked to your Student ID">
+      <span icon>📜</span>
+    </tms-stat-widget>
+
+    <button type="button" class="progress-card" (click)="openGraduationModal()">
+      <tms-progress-ring [percent]="creditsPercent()" caption="to goal" [size]="88" />
+      <div>
+        <p class="progress-card__title">Credit progress</p>
+        <p class="progress-card__subtitle">{{ earnedCredits() }} / {{ creditsGoal() }} credits</p>
+        <span class="progress-card__hint">View graduation eligibility →</span>
+      </div>
+    </button>
+  </section>
+
+  <section class="dashboard__widgets fade-up" style="animation-delay: 0.1s">
+    <div class="widget-card">
+      <div class="widget-card__header">
+        <h3>My records</h3>
+        <p>Enter your Student ID to view certificates and request a transcript.</p>
+      </div>
+
+      <div class="widget-card__input-row">
+        <input
+          type="number"
+          placeholder="Student ID"
+          [ngModel]="studentIdInput()"
+          (ngModelChange)="studentIdInput.set($event)"
+        />
+        <button type="button" class="btn-secondary" (click)="loadCertificates()" [disabled]="!studentIdInput()">
+          Load certificates
+        </button>
+      </div>
+
+      <div class="widget-card__section">
+        <h4>Certificates</h4>
+        @if (certificatesLoading()) {
+          <div class="skeleton" style="height: 60px;"></div>
+        } @else if (certificatesLoaded() && certificates().length === 0) {
+          <p class="widget-card__empty">No certificates found for this Student ID.</p>
+        } @else if (certificates().length > 0) {
+          <ul class="certificate-list">
+            @for (cert of certificates(); track cert.id) {
+              <li>
+                <span class="certificate-list__icon">🏅</span>
+                <div>
+                  <p class="certificate-list__serial">{{ cert.serialNumber }}</p>
+                  <p class="certificate-list__date">Issued {{ cert.issuedAt | date: 'mediumDate' }}</p>
+                </div>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="widget-card__empty">Load your certificates using your Student ID above.</p>
+        }
+      </div>
+
+      <div class="widget-card__section">
+        <h4>Transcript</h4>
+        <button
+          type="button"
+          class="btn-secondary widget-card__full-width"
+          (click)="requestTranscript()"
+          [disabled]="!studentIdInput() || transcriptLoading()"
+        >
+          {{ transcriptLoading() ? 'Requesting…' : 'Request official transcript' }}
+        </button>
+
+        @if (transcriptStatus(); as status) {
+          <div class="transcript-status" [class]="'transcript-status--' + status.state.toLowerCase()">
+            <span class="transcript-status__dot"></span>
+            <div>
+              <p class="transcript-status__state">{{ status.state }}</p>
+              @if (status.state === 'Ready' && status.downloadUrl) {
+                <a [href]="status.downloadUrl" target="_blank" rel="noopener">Download transcript</a>
+              } @else if (status.state === 'Failed') {
+                <p class="transcript-status__error">{{ status.errorMessage }}</p>
+              } @else {
+                <p class="transcript-status__hint">Generating in the background…</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard__catalogue fade-up" style="animation-delay: 0.15s">
+    <div class="dashboard__catalogue-header">
+      <div>
+        <span class="section-kicker">Catalogue</span>
+        <h2>Find a course</h2>
+      </div>
+      <input
+        type="search"
+        class="dashboard__search"
+        placeholder="Search by title or code…"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+    </div>
+
+    @if (filteredCourses().length > 0) {
+      <div class="dashboard__grid">
+        @for (course of filteredCourses(); track course.id) {
+          <tms-course-card [course]="course" />
+        }
+      </div>
+    } @else {
+      <tms-empty-state icon="🔍" title="No matches" description="Try a different search term." />
+    }
+  </section>
+</div>
+
+@if (graduationModalOpen()) {
+  <div class="modal-backdrop" (click)="closeGraduationModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="grad-modal__header">
+        <tms-progress-ring [percent]="creditsPercent()" caption="complete" [size]="104" [strokeWidth]="10" />
+        <div>
+          <h2>{{ isEligibleForGraduation() ? "You're eligible!" : 'Graduation eligibility' }}</h2>
+          <p class="grad-modal__subtitle">
+            {{ earnedCredits() }} of {{ creditsGoal() }} credits earned
+          </p>
+        </div>
+      </div>
+
+      @if (isEligibleForGraduation()) {
+        <div class="grad-modal__status grad-modal__status--eligible">
+          <span>✓</span>
+          <p>You've met the {{ creditsGoal() }}-credit minimum. Talk to your program administrator about next steps.</p>
+        </div>
+      } @else {
+        <div class="grad-modal__status grad-modal__status--pending">
+          <span>{{ creditsRemaining() }}</span>
+          <p>credits remaining until you reach the {{ creditsGoal() }}-credit graduation minimum.</p>
+        </div>
+      }
+
+      <ul class="grad-modal__checklist">
+        <li [class.is-met]="earnedCredits() > 0">
+          <span class="grad-modal__check">{{ earnedCredits() > 0 ? '✓' : '○' }}</span>
+          Enrolled and earning credits
+        </li>
+        <li [class.is-met]="isEligibleForGraduation()">
+          <span class="grad-modal__check">{{ isEligibleForGraduation() ? '✓' : '○' }}</span>
+          Minimum {{ creditsGoal() }} credits completed
+        </li>
+        <li [class.is-met]="certificates().length > 0">
+          <span class="grad-modal__check">{{ certificates().length > 0 ? '✓' : '○' }}</span>
+          At least one course certificate on file
+        </li>
+      </ul>
+
+      <p class="grad-modal__note">
+        Credit totals shown here are illustrative demo data.
+      </p>
+
+      <div class="modal-card__actions">
+        <button type="button" class="btn-secondary" (click)="closeGraduationModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}

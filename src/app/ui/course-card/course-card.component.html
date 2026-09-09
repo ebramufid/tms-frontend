@@ -1,0 +1,31 @@
+<article class="course-card" [class]="'course-card--' + accent()">
+  <div class="course-card__top">
+    <span class="course-card__badge">{{ initials() }}</span>
+    <span class="course-card__status" [class.is-full]="isFull()">
+      {{ isFull() ? 'Full' : 'Open' }}
+    </span>
+  </div>
+
+  <h3 class="course-card__title">
+    <a [routerLink]="['/courses', course().id]">{{ course().title }}</a>
+  </h3>
+  <p class="course-card__code">{{ course().code }}</p>
+
+  <div class="course-card__meta">
+    <div class="course-card__progress-track">
+      <div class="course-card__progress-bar" [style.width.%]="percentFull()"></div>
+    </div>
+    <span class="course-card__seats">
+      {{ course().enrollmentCount }} / {{ course().maxCapacity }} seats
+    </span>
+  </div>
+
+  <button
+    type="button"
+    class="course-card__enroll"
+    [disabled]="isFull()"
+    (click)="enrollClicked.emit(course())"
+  >
+    {{ isFull() ? 'Class full' : 'Enroll now' }}
+  </button>
+</article>

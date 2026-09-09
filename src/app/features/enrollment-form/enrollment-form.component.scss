@@ -1,0 +1,155 @@
+@use '../../../styles/mixins' as *;
+
+.section-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+.btn-primary {
+  @include button-primary;
+  text-decoration: none;
+}
+.btn-secondary {
+  @include button-secondary;
+  text-decoration: none;
+}
+
+.enroll-page {
+  @include page-container($max: 560px);
+  padding-top: 40px;
+  padding-bottom: 64px;
+}
+
+.enroll-card {
+  @include card;
+  padding: 32px;
+
+  h1 {
+    font-size: 1.5rem;
+    margin-top: 6px;
+  }
+
+  &__subtitle {
+    margin-top: 6px;
+    color: var(--text-3);
+    font-size: 0.85rem;
+  }
+
+  &__success {
+    margin-top: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 18px;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--success) 12%, transparent);
+
+    span {
+      font-size: 1.6rem;
+    }
+
+    strong {
+      color: var(--text-1);
+    }
+
+    p {
+      font-size: 0.82rem;
+      color: var(--text-3);
+      margin-top: 2px;
+    }
+  }
+}
+
+.enroll-form {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-2);
+  }
+
+  input {
+    @include input-base;
+  }
+
+  &__hint {
+    color: var(--danger);
+    font-weight: 500;
+    font-size: 0.76rem;
+  }
+
+  &__backups {
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+  }
+
+  &__backups-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-2);
+    margin-bottom: 10px;
+  }
+
+  &__backup-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    input {
+      flex: 1;
+    }
+  }
+
+  &__error {
+    background: color-mix(in srgb, var(--danger) 12%, transparent);
+    color: var(--danger);
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.82rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+  }
+}
+
+.link-btn {
+  @include button-reset;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.icon-btn {
+  @include button-reset;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text-3);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: color-mix(in srgb, var(--danger) 14%, transparent);
+    color: var(--danger);
+  }
+}

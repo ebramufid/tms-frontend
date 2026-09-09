@@ -1,0 +1,105 @@
+@use '../../../styles/mixins' as *;
+
+.btn-primary {
+  @include button-primary;
+  text-decoration: none;
+}
+.btn-secondary {
+  @include button-secondary;
+  text-decoration: none;
+}
+
+.course-detail {
+  @include page-container($max: 720px);
+  padding-top: 40px;
+  padding-bottom: 64px;
+
+  &__skeleton {
+    padding-top: 8px;
+  }
+
+  &__card {
+    @include card;
+    padding: 32px;
+  }
+
+  &__code {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.03em;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-top: 8px;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+
+    strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+    }
+
+    span {
+      font-size: 0.76rem;
+      color: var(--text-3);
+    }
+  }
+
+  &__progress {
+    margin-top: 20px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-3);
+    overflow: hidden;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.6s var(--ease-standard);
+  }
+
+  &__actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}
+
+.status-page {
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+
+  &__icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  p {
+    margin-top: 10px;
+    color: var(--text-2);
+  }
+
+  &__cta {
+    @include button-primary;
+    margin-top: 24px;
+    text-decoration: none;
+  }
+}

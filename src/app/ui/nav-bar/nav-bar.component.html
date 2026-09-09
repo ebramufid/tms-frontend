@@ -1,0 +1,105 @@
+<header class="nav">
+  <div class="nav__inner">
+    <a routerLink="/" class="nav__brand" (click)="closeMobileMenu()">
+      <span class="nav__brand-mark">TMS</span>
+      <span class="nav__brand-name">Training&nbsp;Hub</span>
+    </a>
+
+    <nav class="nav__links" [class.is-open]="mobileMenuOpen()">
+      <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">
+        Courses
+      </a>
+
+      @if (auth.currentUser()) {
+        @if (auth.hasRole('Student')) {
+          <a routerLink="/dashboard" routerLinkActive="is-active" (click)="closeMobileMenu()">Dashboard</a>
+        }
+        @if (auth.hasRole('Instructor')) {
+          <a routerLink="/instructor" routerLinkActive="is-active" (click)="closeMobileMenu()">Instructor</a>
+          <a routerLink="/grade-submission" routerLinkActive="is-active" (click)="closeMobileMenu()">Grades</a>
+        }
+        @if (auth.hasRole('Admin')) {
+          <a routerLink="/admin/courses" routerLinkActive="is-active" (click)="closeMobileMenu()">Manage Courses</a>
+          <a routerLink="/admin/role-requests" routerLinkActive="is-active" (click)="closeMobileMenu()">Role Requests</a>
+        }
+      }
+
+      <div class="nav__mobile-actions">
+        @if (auth.currentUser()) {
+          <button type="button" class="nav__logout" (click)="logout()">Log out</button>
+        } @else {
+          <a routerLink="/login" class="nav__cta" (click)="closeMobileMenu()">Sign in</a>
+        }
+      </div>
+    </nav>
+
+    <div class="nav__actions">
+      <tms-theme-toggle />
+
+      @if (auth.currentUser()) {
+        <div class="nav__notif">
+          <button
+            type="button"
+            class="nav__icon-button"
+            (click)="toggleFeed()"
+            aria-label="Notifications"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+              <path
+                d="M6 8a6 6 0 1 1 12 0c0 3.2 1 5 1.5 6H4.5C5 13 6 11.2 6 8Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+              <path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+            @if (notifications.unreadCount() > 0) {
+              <span class="nav__badge">{{ notifications.unreadCount() > 9 ? '9+' : notifications.unreadCount() }}</span>
+            }
+          </button>
+
+          @if (feedOpen()) {
+            <div class="nav__feed">
+              <div class="nav__feed-header">
+                <strong>Notifications</strong>
+                @if (notifications.feed().length > 0) {
+                  <button type="button" (click)="notifications.clearFeed()">Clear</button>
+                }
+              </div>
+
+              <div class="nav__feed-list">
+                @for (item of notifications.feed(); track item.id) {
+                  <div class="nav__feed-item" [class]="'tone-' + item.tone">
+                    <span class="nav__feed-dot"></span>
+                    <div>
+                      <p class="nav__feed-title">{{ item.title }}</p>
+                      @if (item.message) {
+                        <p class="nav__feed-message">{{ item.message }}</p>
+                      }
+                      <span class="nav__feed-time">{{ timeAgo(item.createdAt) }}</span>
+                    </div>
+                  </div>
+                } @empty {
+                  <p class="nav__feed-empty">You're all caught up.</p>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <button type="button" class="nav__logout nav__logout--desktop" (click)="logout()">Log out</button>
+      } @else {
+        <a routerLink="/login" class="nav__cta nav__cta--desktop">Sign in</a>
+      }
+
+      <button
+        type="button"
+        class="nav__menu-toggle"
+        (click)="toggleMobileMenu()"
+        aria-label="Toggle navigation menu"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>

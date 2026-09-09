@@ -1,0 +1,137 @@
+@use '../../../styles/mixins' as *;
+
+.enroll-list {
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 6px;
+    background: var(--surface-2);
+    padding: 4px;
+    border-radius: var(--radius-md);
+
+    button {
+      @include button-reset;
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-2);
+      transition: background var(--transition-fast), color var(--transition-fast);
+
+      &.is-active {
+        background: var(--surface-1);
+        color: var(--accent);
+        box-shadow: var(--shadow-sm);
+      }
+    }
+  }
+
+  &__sort {
+    @include button-ghost;
+    font-size: 0.8rem;
+    border: 1px solid var(--border);
+
+    svg {
+      transition: transform var(--transition-fast);
+    }
+  }
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.enroll-table {
+  @include card;
+  overflow: hidden;
+
+  &__head,
+  &__row {
+    display: grid;
+    grid-template-columns: 1.4fr 1.4fr 1fr 0.9fr 0.8fr;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 18px;
+  }
+
+  &__head {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-3);
+    background: var(--surface-2);
+  }
+
+  &__row {
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: var(--surface-2);
+    }
+  }
+
+  &__student {
+    font-weight: 600;
+    color: var(--text-1);
+  }
+
+  &__date {
+    color: var(--text-3);
+  }
+
+  &__approve {
+    @include button-secondary;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+  }
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  &--pending {
+    background: color-mix(in srgb, var(--warning) 16%, transparent);
+    color: var(--warning);
+  }
+  &--approved {
+    background: color-mix(in srgb, var(--success) 16%, transparent);
+    color: var(--success);
+  }
+  &--rejected {
+    background: color-mix(in srgb, var(--danger) 16%, transparent);
+    color: var(--danger);
+  }
+}
+
+@media (max-width: 760px) {
+  .enroll-table__head {
+    display: none;
+  }
+
+  .enroll-table__row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 14px 16px;
+
+    span:empty {
+      display: none;
+    }
+  }
+}

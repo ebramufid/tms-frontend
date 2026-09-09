@@ -1,0 +1,38 @@
+<div class="grade-page">
+  <div class="grade-card fade-up">
+    <span class="section-kicker">Instructor</span>
+    <h1>Submit a grade</h1>
+    <p class="grade-card__subtitle">Record a final score for a student's course.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="grade-form">
+      <div class="grade-form__row">
+        <label>
+          <span>Student ID</span>
+          <input type="number" formControlName="studentId" min="1" />
+        </label>
+
+        <label>
+          <span>Course ID</span>
+          <input type="number" formControlName="courseId" min="1" />
+        </label>
+      </div>
+
+      <label>
+        <span>Score (0–100)</span>
+        <input type="number" formControlName="score" min="0" max="100" />
+      </label>
+
+      @if (submitError()) {
+        <div class="grade-form__error">{{ submitError() }}</div>
+      }
+
+      @if (lastResult(); as result) {
+        <div class="grade-form__success">Grade recorded — reference {{ result.id }}</div>
+      }
+
+      <button type="submit" class="btn-primary" [disabled]="submitting()">
+        {{ submitting() ? 'Submitting…' : 'Submit grade' }}
+      </button>
+    </form>
+  </div>
+</div>

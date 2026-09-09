@@ -1,0 +1,110 @@
+@use '../../../styles/mixins' as *;
+
+.course-card {
+  @include card;
+  @include card-hover;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  --card-accent: var(--accent);
+  --card-accent-soft: var(--accent-soft);
+
+  &--violet { --card-accent: hsl(258 78% 62%); --card-accent-soft: hsl(258 85% 95%); }
+  &--blue { --card-accent: hsl(212 80% 58%); --card-accent-soft: hsl(212 85% 95%); }
+  &--green { --card-accent: hsl(154 55% 42%); --card-accent-soft: hsl(154 65% 93%); }
+  &--amber { --card-accent: hsl(35 85% 52%); --card-accent-soft: hsl(35 90% 93%); }
+  &--rose { --card-accent: hsl(346 75% 58%); --card-accent-soft: hsl(346 85% 95%); }
+  &--cyan { --card-accent: hsl(190 65% 45%); --card-accent-soft: hsl(190 75% 93%); }
+
+  [data-theme='dark'] & {
+    --card-accent-soft: color-mix(in srgb, var(--card-accent) 22%, transparent);
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__badge {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--card-accent-soft);
+    color: var(--card-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    font-family: var(--font-display);
+  }
+
+  &__status {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--success) 15%, transparent);
+    color: var(--success);
+
+    &.is-full {
+      background: color-mix(in srgb, var(--danger) 15%, transparent);
+      color: var(--danger);
+    }
+  }
+
+  &__title {
+    font-size: 1.05rem;
+    line-height: 1.3;
+
+    a {
+      text-decoration: none;
+      color: var(--text-1);
+
+      &:hover {
+        color: var(--card-accent);
+      }
+    }
+  }
+
+  &__code {
+    font-size: 0.78rem;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-top: -8px;
+  }
+
+  &__meta {
+    margin-top: auto;
+  }
+
+  &__progress-track {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--surface-3);
+    overflow: hidden;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--card-accent);
+    transition: width 0.6s var(--ease-standard);
+  }
+
+  &__seats {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.76rem;
+    color: var(--text-3);
+  }
+
+  &__enroll {
+    @include button-primary;
+    width: 100%;
+    background: var(--card-accent);
+  }
+}

@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: calc(100vh - 64px - 56px);
+  view-transition-name: page;
+}
+
+.app-footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 24px;
+
+  &__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    color: var(--text-3);
+    font-size: 0.8rem;
+  }
+
+  &__dot {
+    opacity: 0.6;
+  }
+}
+
+::view-transition-old(page),
+::view-transition-new(page) {
+  animation-duration: 0.28s;
+}

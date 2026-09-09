@@ -1,0 +1,62 @@
+<div class="enroll-list">
+  <div class="enroll-list__toolbar">
+    <div class="enroll-list__filters">
+      @for (option of statusFilters; track option) {
+        <button
+          type="button"
+          [class.is-active]="statusFilter() === option"
+          (click)="setFilter(option)"
+        >
+          {{ option }}
+        </button>
+      }
+    </div>
+
+    <button type="button" class="enroll-list__sort" (click)="toggleSort()">
+      Enrolled {{ sortDescending() ? 'newest first' : 'oldest first' }}
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" [style.transform]="sortDescending() ? 'rotate(0deg)' : 'rotate(180deg)'">
+        <path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+
+  @if (store.isLoading()) {
+    <div class="enroll-list__skeleton">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton" style="height: 52px;"></div>
+      }
+    </div>
+  } @else if (filteredSorted().length > 0) {
+    <div class="enroll-table">
+      <div class="enroll-table__head">
+        <span>Student</span>
+        <span>Course</span>
+        <span>Enrolled</span>
+        <span>Status</span>
+        <span></span>
+      </div>
+
+      @for (row of filteredSorted(); track row.id) {
+        <div class="enroll-table__row">
+          <span class="enroll-table__student">{{ row.studentName }}</span>
+          <span>{{ row.courseName }}</span>
+          <span class="enroll-table__date">{{ row.enrolledAt | date: 'MMM d, y' }}</span>
+          <span>
+            <span class="status-pill" [class]="'status-pill--' + row.status.toLowerCase()">
+              {{ row.status }}
+            </span>
+          </span>
+          <span>
+            @if (row.status === 'Pending') {
+              <button type="button" class="enroll-table__approve" (click)="approve(row.id)">
+                Approve
+              </button>
+            }
+          </span>
+        </div>
+      }
+    </div>
+  } @else {
+    <tms-empty-state icon="📋" title="No enrollments" description="Nothing matches this filter yet." />
+  }
+</div>

@@ -1,0 +1,74 @@
+// ============================================================
+// Design tokens — CSS custom properties, theme-switchable via
+// [data-theme="light" | "dark"] on <html> (see ThemeService).
+// Component SCSS never hardcodes colors; it reads these vars.
+// ============================================================
+
+:root {
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Sora', var(--font-body);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+
+  --transition-fast: 160ms;
+  --transition-base: 240ms;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --accent-h: 255;
+  --accent: hsl(var(--accent-h) 78% 62%);
+  --accent-strong: hsl(var(--accent-h) 72% 52%);
+  --accent-soft: hsl(var(--accent-h) 85% 96%);
+
+  --success: #17a672;
+  --warning: #d68a1c;
+  --danger: #e0455a;
+
+  --gradient-brand: linear-gradient(135deg, hsl(258 85% 66%), hsl(288 80% 66%));
+  --gradient-brand-soft: linear-gradient(135deg, hsl(258 90% 96%), hsl(288 85% 96%));
+}
+
+[data-theme='light'] {
+  --bg: #f6f5fb;
+  --surface-1: #ffffff;
+  --surface-1-translucent: rgb(255 255 255 / 78%);
+  --surface-2: #f1f0f9;
+  --surface-3: #e7e5f4;
+  --border: #e5e3f1;
+  --border-strong: #d3d0e8;
+
+  --text-1: #17152b;
+  --text-2: #5b5876;
+  --text-3: #8d8aa5;
+
+  --shadow-sm: 0 1px 2px rgb(23 21 43 / 6%);
+  --shadow-md: 0 8px 24px rgb(23 21 43 / 8%);
+  --shadow-lg: 0 20px 48px rgb(23 21 43 / 14%);
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #100e1c;
+  --surface-1: #17152a;
+  --surface-1-translucent: rgb(23 21 42 / 78%);
+  --surface-2: #1e1b34;
+  --surface-3: #27243f;
+  --border: #2c2946;
+  --border-strong: #383462;
+
+  --text-1: #f3f2fb;
+  --text-2: #b3b0cc;
+  --text-3: #7d7a9c;
+
+  --accent-soft: hsl(var(--accent-h) 45% 22%);
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 40%);
+  --shadow-lg: 0 24px 56px rgb(0 0 0 / 55%);
+
+  color-scheme: dark;
+}

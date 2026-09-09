@@ -1,0 +1,59 @@
+<section class="hero">
+  <div class="hero__inner">
+    <span class="hero__eyebrow fade-up">Training Management System</span>
+    <h1 class="hero__title fade-up" style="animation-delay: 0.05s">
+      Learning, organized. <span class="hero__gradient-text">Enrollment, effortless.</span>
+    </h1>
+    <p class="hero__subtitle fade-up" style="animation-delay: 0.1s">
+      Browse the live course catalogue, track your seats, and enroll in seconds —
+      built on the same TMS API your instructors and admins use every day.
+    </p>
+
+    <div class="hero__actions fade-up" style="animation-delay: 0.15s">
+      @if (authService.currentUser()) {
+        <a routerLink="/dashboard" class="btn-primary">Go to your dashboard</a>
+      } @else {
+        <a routerLink="/register" class="btn-primary">Create a free account</a>
+        <a routerLink="/login" class="btn-secondary">Sign in</a>
+      }
+    </div>
+
+    <div class="hero__stats fade-up" style="animation-delay: 0.2s">
+      <div>
+        <strong>{{ totalCourses() }}</strong>
+        <span>Courses</span>
+      </div>
+      <div>
+        <strong>{{ openCourses() }}</strong>
+        <span>Open now</span>
+      </div>
+      <div>
+        <strong>{{ totalSeats() }}</strong>
+        <span>Total seats</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="catalogue">
+  <div class="catalogue__header">
+    <div>
+      <span class="section-kicker">Catalogue</span>
+      <h2>Explore current courses</h2>
+    </div>
+  </div>
+
+  @if (store.entities().length > 0) {
+    <div class="catalogue__grid">
+      @for (course of store.entities(); track course.id) {
+        <tms-course-card [course]="course" />
+      }
+    </div>
+  } @else {
+    <tms-empty-state
+      icon="📚"
+      title="No courses yet"
+      description="Check back soon — the catalogue is being populated."
+    />
+  }
+</section>

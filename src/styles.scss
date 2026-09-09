@@ -1,0 +1,44 @@
+@use './styles/tokens';
+@use './styles/base';
+@use './styles/animations';
+
+// View Transitions: a soft cross-fade + slight rise for route changes,
+// driven entirely by the router's withViewTransitions() — no JS animation
+// library required.
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.32s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: tms-fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: tms-fade-in;
+}
+
+@keyframes tms-fade-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes tms-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

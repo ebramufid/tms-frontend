@@ -1,0 +1,125 @@
+@use '../../../styles/mixins' as *;
+
+.analytics-card {
+  @include card;
+  padding: 22px 24px 26px;
+}
+
+.analytics-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+
+  h3 {
+    font-size: 1.05rem;
+    margin-top: 2px;
+  }
+}
+
+.analytics-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.analytics-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--success);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+
+  span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulse-dot 1.6s ease-in-out infinite;
+  }
+}
+
+.analytics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.analytics-row__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.analytics-course-name {
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.analytics-total {
+  color: var(--text-3);
+  font-size: 0.78rem;
+}
+
+.analytics-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  display: flex;
+  overflow: hidden;
+}
+
+.analytics-bar__approved {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.6s var(--ease-standard);
+}
+
+.analytics-bar__pending {
+  height: 100%;
+  background: var(--warning);
+  transition: width 0.6s var(--ease-standard);
+}
+
+.analytics-values {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+  font-size: 0.76rem;
+  color: var(--text-3);
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .approved-dot {
+    background: var(--accent);
+  }
+
+  .pending-dot {
+    background: var(--warning);
+  }
+}
+
+.analytics-empty {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--text-3);
+  font-size: 0.85rem;
+}

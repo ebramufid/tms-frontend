@@ -1,0 +1,117 @@
+<div class="admin-page">
+  <header class="admin-page__header fade-up">
+    <div>
+      <span class="section-kicker">Admin</span>
+      <h1>Course management</h1>
+    </div>
+    <button type="button" class="btn-primary" (click)="openCreatePanel()">+ New course</button>
+  </header>
+
+  <section class="admin-page__stats fade-up" style="animation-delay: 0.05s">
+    <div class="mini-stat">
+      <strong>{{ store.entities().length }}</strong>
+      <span>Courses</span>
+    </div>
+    <div class="mini-stat">
+      <strong>{{ totalEnrolled() }}</strong>
+      <span>Enrolled</span>
+    </div>
+    <div class="mini-stat">
+      <strong>{{ totalSeats() }}</strong>
+      <span>Total seats</span>
+    </div>
+  </section>
+
+  @if (store.deleteError()) {
+    <div class="admin-page__error fade-up">{{ store.deleteError() }}</div>
+  }
+  @if (store.updateError()) {
+    <div class="admin-page__error fade-up">{{ store.updateError() }}</div>
+  }
+
+  @if (store.entities().length > 0) {
+    <div class="admin-table fade-up" style="animation-delay: 0.1s">
+      <div class="admin-table__head">
+        <span>Code</span>
+        <span>Title</span>
+        <span>Capacity</span>
+        <span>Enrolled</span>
+        <span></span>
+      </div>
+
+      @for (course of store.entities(); track course.id) {
+        <div class="admin-table__row" [class.is-editing]="editingCourse()?.id === course.id">
+          @if (editingCourse()?.id === course.id) {
+            <span class="admin-table__code">{{ course.code }}</span>
+            <input type="text" [(ngModel)]="editTitle" />
+            <input type="number" [(ngModel)]="editCapacity" min="1" />
+            <span>{{ course.enrollmentCount }}</span>
+            <span class="admin-table__actions">
+              <button type="button" class="link-btn" (click)="submitEdit()" [disabled]="store.updatingCourseId() === course.id">
+                Save
+              </button>
+              <button type="button" class="link-btn link-btn--muted" (click)="cancelEdit()">Cancel</button>
+            </span>
+          } @else {
+            <span class="admin-table__code">{{ course.code }}</span>
+            <span>{{ course.title }}</span>
+            <span>{{ course.maxCapacity }}</span>
+            <span>{{ course.enrollmentCount }}</span>
+            <span class="admin-table__actions">
+              <button type="button" class="link-btn" (click)="startEdit(course)">Edit</button>
+              <button
+                type="button"
+                class="link-btn link-btn--danger"
+                (click)="remove(course)"
+                [disabled]="store.deletingCourseId() === course.id"
+              >
+                {{ store.deletingCourseId() === course.id ? 'Deleting…' : 'Delete' }}
+              </button>
+            </span>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <tms-empty-state icon="🗂️" title="No courses" description="Create your first course to get started." />
+  }
+</div>
+
+@if (createPanelOpen()) {
+  <div class="modal-backdrop" (click)="closeCreatePanel()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h2>Create a course</h2>
+
+      <label>
+        <span>Course code</span>
+        <input type="text" [(ngModel)]="newCode" placeholder="e.g. CS-201" />
+      </label>
+
+      <label>
+        <span>Title</span>
+        <input type="text" [(ngModel)]="newTitle" placeholder="e.g. Data Structures" />
+      </label>
+
+      <label>
+        <span>Max capacity</span>
+        <input type="number" [(ngModel)]="newCapacity" min="1" />
+      </label>
+
+      @if (store.createError()) {
+        <div class="admin-page__error">{{ store.createError() }}</div>
+      }
+
+      <div class="modal-card__actions">
+        <button type="button" class="btn-secondary" (click)="closeCreatePanel()">Cancel</button>
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="submitCreate()"
+          [disabled]="store.creatingCourse() || !newCode || !newTitle || !newCapacity"
+        >
+          {{ store.creatingCourse() ? 'Creating…' : 'Create course' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

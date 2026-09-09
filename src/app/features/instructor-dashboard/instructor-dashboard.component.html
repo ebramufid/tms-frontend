@@ -1,0 +1,43 @@
+<div class="instructor-page">
+  <header class="instructor-page__header fade-up">
+    <div>
+      <span class="section-kicker">Instructor dashboard</span>
+      <h1>Manage enrollments</h1>
+    </div>
+    <a routerLink="/grade-submission" class="btn-primary">Submit grades</a>
+  </header>
+
+  <section class="instructor-page__stats fade-up" style="animation-delay: 0.05s">
+    <tms-stat-widget label="Courses" [value]="courseStore.entities().length" tone="accent">
+      <span icon>📘</span>
+    </tms-stat-widget>
+    <tms-stat-widget label="Pending review" [value]="enrollmentStore.pendingCount()" tone="warning">
+      <span icon>⏳</span>
+    </tms-stat-widget>
+    <tms-stat-widget label="Approved" [value]="enrollmentStore.approvedCount()" tone="success">
+      <span icon>✅</span>
+    </tms-stat-widget>
+  </section>
+
+  <section class="fade-up" style="animation-delay: 0.1s">
+    <tms-enrollment-summary />
+  </section>
+
+  <section class="instructor-page__grid fade-up" style="animation-delay: 0.15s">
+    <div>
+      <h2 class="instructor-page__section-title">Enrollment requests</h2>
+      <app-enrollment-list />
+    </div>
+
+    <div>
+      <h2 class="instructor-page__section-title">Analytics</h2>
+      @defer (on viewport) {
+        <tms-analytics-chart [data]="enrollmentStore.entities()" />
+      } @placeholder {
+        <div class="skeleton" style="height: 280px; border-radius: var(--radius-lg);"></div>
+      } @loading (minimum 200ms) {
+        <div class="skeleton" style="height: 280px; border-radius: var(--radius-lg);"></div>
+      }
+    </div>
+  </section>
+</div>

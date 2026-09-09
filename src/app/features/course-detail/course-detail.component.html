@@ -1,0 +1,50 @@
+<div class="course-detail">
+  @if (loading()) {
+    <div class="course-detail__skeleton">
+      <div class="skeleton" style="height: 40px; width: 60%;"></div>
+      <div class="skeleton" style="height: 20px; width: 30%; margin-top: 12px;"></div>
+      <div class="skeleton" style="height: 120px; margin-top: 24px;"></div>
+    </div>
+  } @else if (notFound()) {
+    <div class="status-page fade-up">
+      <div class="status-page__icon">📭</div>
+      <h1>Course not found</h1>
+      <p>This course may have been removed or the link is incorrect.</p>
+      <a routerLink="/" class="status-page__cta">Back to catalogue</a>
+    </div>
+  } @else if (course(); as c) {
+    <div class="course-detail__card fade-up">
+      <span class="course-detail__code">{{ c.code }}</span>
+      <h1>{{ c.title }}</h1>
+
+      <div class="course-detail__meta">
+        <div>
+          <strong>{{ c.enrollmentCount }}</strong>
+          <span>Enrolled</span>
+        </div>
+        <div>
+          <strong>{{ c.maxCapacity }}</strong>
+          <span>Capacity</span>
+        </div>
+        <div>
+          <strong>{{ c.maxCapacity - c.enrollmentCount }}</strong>
+          <span>Seats left</span>
+        </div>
+      </div>
+
+      <div class="course-detail__progress">
+        <div
+          class="course-detail__progress-bar"
+          [style.width.%]="c.maxCapacity > 0 ? (c.enrollmentCount / c.maxCapacity) * 100 : 0"
+        ></div>
+      </div>
+
+      <div class="course-detail__actions">
+        <a routerLink="/enroll" [queryParams]="{ courseCode: c.code }" class="btn-primary">
+          Enroll in this course
+        </a>
+        <a routerLink="/" class="btn-secondary">Back to catalogue</a>
+      </div>
+    </div>
+  }
+</div>

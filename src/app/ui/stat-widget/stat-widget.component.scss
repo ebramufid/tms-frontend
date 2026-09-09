@@ -1,0 +1,84 @@
+@use '../../../styles/mixins' as *;
+
+.stat-widget {
+  @include card;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--tone-soft, var(--accent-soft));
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  &:hover::before {
+    opacity: 0.35;
+  }
+
+  &__icon {
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--tone-soft, var(--accent-soft));
+    color: var(--tone, var(--accent));
+    font-size: 1.2rem;
+    z-index: 1;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    z-index: 1;
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    color: var(--text-2);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  &__value {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-top: 2px;
+  }
+
+  &__description {
+    font-size: 0.78rem;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+
+  &__trend {
+    z-index: 1;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--success);
+    align-self: flex-start;
+
+    &.is-down {
+      color: var(--danger);
+    }
+  }
+
+  &--accent { --tone: var(--accent); --tone-soft: var(--accent-soft); }
+  &--success { --tone: var(--success); --tone-soft: color-mix(in srgb, var(--success) 16%, transparent); }
+  &--warning { --tone: var(--warning); --tone-soft: color-mix(in srgb, var(--warning) 16%, transparent); }
+  &--danger { --tone: var(--danger); --tone-soft: color-mix(in srgb, var(--danger) 16%, transparent); }
+  &--neutral { --tone: var(--text-2); --tone-soft: var(--surface-3); }
+}

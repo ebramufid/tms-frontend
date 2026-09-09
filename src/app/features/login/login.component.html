@@ -1,0 +1,170 @@
+<div class="auth-page">
+  <div class="auth-card fade-up">
+    <div class="auth-card__tabs">
+      <button
+        type="button"
+        [class.is-active]="mode() === 'login'"
+        (click)="setMode('login')"
+      >
+        Sign in
+      </button>
+      <button
+        type="button"
+        [class.is-active]="mode() === 'register'"
+        (click)="setMode('register')"
+      >
+        Create account
+      </button>
+    </div>
+
+    @if (mode() === 'login') {
+      <div class="auth-card__body">
+        <h1>Welcome back</h1>
+        <p class="auth-card__subtitle">Sign in to your TMS account</p>
+
+        <form (ngSubmit)="login()" class="auth-form">
+          <label>
+            <span>Email</span>
+            <input type="text" name="username" [(ngModel)]="username" required autocomplete="username" />
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input
+              type="password"
+              name="password"
+              [(ngModel)]="password"
+              required
+              autocomplete="current-password"
+            />
+          </label>
+
+          @if (errorMessage()) {
+            <div class="auth-form__error">{{ errorMessage() }}</div>
+          }
+
+          <button type="submit" class="auth-form__submit" [disabled]="loading() || !username || !password">
+            {{ loading() ? 'Signing in…' : 'Sign in' }}
+          </button>
+        </form>
+
+        <div class="demo-accounts">
+          <div class="demo-accounts__header">
+            <span class="demo-accounts__icon">◆</span>
+            <span>Demo accounts</span>
+          </div>
+
+          @for (demo of demoAccounts; track demo.role) {
+            <button type="button" class="demo-accounts__row" (click)="fillDemo(demo)">
+              <span class="demo-accounts__role">{{ demo.role }}</span>
+              <span class="demo-accounts__creds">
+                <strong>{{ demo.email }}</strong>
+                <span>{{ demo.password }}</span>
+              </span>
+            </button>
+          }
+        </div>
+
+        <p class="auth-card__switch">
+          New here?
+          <button type="button" (click)="setMode('register')">Create an account</button>
+        </p>
+      </div>
+    } @else {
+      <div class="auth-card__body">
+        <h1>Create your account</h1>
+        <p class="auth-card__subtitle">Public sign-up creates a Student account</p>
+
+        @if (registerSuccess()) {
+          <div class="auth-form__success">
+            {{ registerSuccessMessage() }}
+          </div>
+        } @else {
+          <form (ngSubmit)="register()" class="auth-form">
+            <div class="auth-form__row">
+              <label>
+                <span>First name</span>
+                <input type="text" name="firstName" [(ngModel)]="firstName" required autocomplete="given-name" />
+              </label>
+              <label>
+                <span>Last name</span>
+                <input type="text" name="lastName" [(ngModel)]="lastName" required autocomplete="family-name" />
+              </label>
+            </div>
+
+            <label>
+              <span>Email</span>
+              <input
+                type="email"
+                name="registerEmail"
+                [(ngModel)]="registerEmail"
+                required
+                autocomplete="email"
+              />
+            </label>
+
+            <label>
+              <span>Password</span>
+              <input
+                type="password"
+                name="registerPassword"
+                [(ngModel)]="registerPassword"
+                required
+                autocomplete="new-password"
+              />
+            </label>
+
+            <div class="role-picker">
+              <span class="role-picker__label">I am a…</span>
+              <div class="role-picker__cards">
+                @for (option of roleOptions; track option.value) {
+                  <button
+                    type="button"
+                    class="role-card"
+                    [class.is-selected]="selectedRole() === option.value"
+                    (click)="selectRole(option.value)"
+                  >
+                    <span class="role-card__icon">{{ option.icon }}</span>
+                    <span class="role-card__label">{{ option.label }}</span>
+                    <span class="role-card__description">{{ option.description }}</span>
+                  </button>
+                }
+              </div>
+
+              @if (selectedRole() !== 'Student') {
+                <div class="role-picker__note">
+                  <p>
+                    Your account is created as a Student right away. This
+                    submits a request for an Admin to review — you'll keep
+                    Student access until it's approved.
+                  </p>
+                  <label>
+                    <span>Why do you need this role? (optional)</span>
+                    <textarea name="roleNote" [(ngModel)]="roleNote" rows="2"></textarea>
+                  </label>
+                </div>
+              }
+            </div>
+
+            @if (errorMessage()) {
+              <div class="auth-form__error">{{ errorMessage() }}</div>
+            }
+
+            <button
+              type="submit"
+              class="auth-form__submit"
+              [disabled]="loading() || !firstName || !lastName || !registerEmail || !registerPassword"
+            >
+              {{ loading() ? 'Creating account…' : 'Create account' }}
+            </button>
+          </form>
+        }
+
+        <p class="auth-card__switch">
+          Already have an account?
+          <button type="button" (click)="setMode('login')">Sign in</button>
+        </p>
+      </div>
+    }
+  </div>
+</div>

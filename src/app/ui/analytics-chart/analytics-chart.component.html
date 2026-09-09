@@ -1,0 +1,36 @@
+<div class="analytics-card">
+  <div class="analytics-card__header">
+    <div>
+      <span class="analytics-kicker">Enrollment activity</span>
+      <h3>Course enrollment analytics</h3>
+    </div>
+    <span class="analytics-live"><span></span> Live</span>
+  </div>
+
+  <div class="analytics-list">
+    @for (course of breakdown(); track course.courseName) {
+      <div class="analytics-row">
+        <div class="analytics-row__meta">
+          <span class="analytics-course-name">{{ course.courseName }}</span>
+          <span class="analytics-total">{{ course.total }} total</span>
+        </div>
+        <div class="analytics-bar">
+          <div
+            class="analytics-bar__approved"
+            [style.width.%]="course.total > 0 ? (course.approved / course.total) * course.percentOfMax : 0"
+          ></div>
+          <div
+            class="analytics-bar__pending"
+            [style.width.%]="course.total > 0 ? (course.pending / course.total) * course.percentOfMax : 0"
+          ></div>
+        </div>
+        <div class="analytics-values">
+          <span><i class="approved-dot"></i>{{ course.approved }} approved</span>
+          <span><i class="pending-dot"></i>{{ course.pending }} pending</span>
+        </div>
+      </div>
+    } @empty {
+      <div class="analytics-empty">No enrollment activity to display yet.</div>
+    }
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="enroll-page">
+  <div class="enroll-card fade-up">
+    <span class="section-kicker">Enrollment</span>
+    <h1>Request enrollment</h1>
+    <p class="enroll-card__subtitle">
+      Enrollment is tied to your account — just enter the course code.
+    </p>
+
+    @if (submitted()) {
+      <div class="enroll-card__success">
+        <span>🎉</span>
+        <div>
+          <strong>Request submitted!</strong>
+          <p>Redirecting you to your dashboard…</p>
+        </div>
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()" class="enroll-form">
+        <label>
+          <span>Course code</span>
+          <input type="text" formControlName="courseCode" placeholder="e.g. CS-201" />
+          @if (form.controls.courseCode.touched && form.controls.courseCode.invalid) {
+            <small class="enroll-form__hint">Course code is required.</small>
+          }
+        </label>
+
+        <div class="enroll-form__backups" formArrayName="backupCourses">
+          <div class="enroll-form__backups-header">
+            <span>Backup courses (optional)</span>
+            <button type="button" class="link-btn" (click)="addBackupCourse()">+ Add backup</button>
+          </div>
+
+          @for (control of backupCourses.controls; track $index) {
+            <div class="enroll-form__backup-row">
+              <input type="text" [formControlName]="$index" placeholder="Alternate course code" />
+              <button type="button" class="icon-btn" (click)="removeBackupCourse($index)" aria-label="Remove">
+                ×
+              </button>
+            </div>
+          }
+        </div>
+
+        @if (submitError()) {
+          <div class="enroll-form__error">{{ submitError() }}</div>
+        }
+
+        <div class="enroll-form__actions">
+          <a routerLink="/" class="btn-secondary">Cancel</a>
+          <button type="submit" class="btn-primary" [disabled]="submitting()">
+            {{ submitting() ? 'Submitting…' : 'Submit request' }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>
